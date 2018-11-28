@@ -1,4 +1,4 @@
-import java.lang.Math;;
+import java.lang.Math;
 //All figures are in millions (USD)
 public class HistFreeCashFlow {
 
