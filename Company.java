@@ -18,7 +18,7 @@ public class Company {
   private double totalEquity;
   private double costOfEquity;
   private double costOfDebt;
-  // private double wacc = .0756;
+  private double wacc;
 
   public Company(String name, String ticker, String date, double numberOfShares) {
     this.name = name;
@@ -29,6 +29,50 @@ public class Company {
     this.DCFModelForecast = new LinkedList<>();
   }
 
+
+  public double getEV() {
+    return this.enterpriseValue;
+  }
+
+  public void setEV(double e) {
+    this.enterpriseValue = e;
+  }
+
+  public double getTotalDebt() {
+    return this.totalDebt;
+  }
+
+  public double getTotalEquity() {
+    return this.totalEquity;
+  }
+
+  public double getCostOfEquity() {
+   return this.costOfEquity;
+  }
+
+  public double getCostOfDebt() {
+    return this.costOfDebt;
+  }
+
+  public double getWacc() {
+    return this.wacc;
+  }
+
+  public void setTotalDebt(double d) {
+    this.totalDebt = d;
+  }
+
+  public void setTotalEquity(double e) {
+    this.totalEquity = e;
+  }
+
+  public void setCostOfEquity(double e) {
+    this.costOfEquity = e;
+  }
+
+  public void setCostOfDebt(double d) {
+    this.costOfDebt = d;
+  }
   // public LinkedList<HistFreeCashFlow> getHistoricalData() {
   //   return this.HistoricalData<HistoricalData>();
   // }
@@ -40,7 +84,17 @@ public class Company {
     this.DCFModelForecast.add(data);
   }
 
+  public double computePresentValue() {
+    double sum = 0.00;
+    for(DCFModel cashflow : this.DCFModelForecast) {
+      sum += cashflow.getDiscountedFCF();
+    }
+    return enterpriseValue = sum;
+  }
 
+  public void computeWacc() {
+    this.wacc = (this.totalDebt/(this.totalDebt + this.totalEquity)) * this.costOfDebt + (this.totalEquity/(this.totalDebt + this.totalEquity)) * costOfEquity;
+  }
 
   public double computePricePerShare() {
     pricePerShare = enterpriseValue / numberOfShares;
