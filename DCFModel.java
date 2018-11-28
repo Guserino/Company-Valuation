@@ -68,6 +68,24 @@ public class DCFModel {
     this.forecastYear = y;
   }
 
+  public void setDiscountFactor(double d) {
+    this.discountFactor = d;
+  }
+
+  public void setFCF(double f) {
+    this.freeCashFlow = f;
+  }
+  public void setDCF(double d) {
+    this.discountedFCF = d;
+  }
+
+  public void setWacc(double w) {
+    this.wacc = w;
+  }
+  public double getDCF() {
+    return this.discountedFCF;
+  }
+
   public double getSales() {
     return this.sales;
   }
@@ -88,6 +106,15 @@ public class DCFModel {
     return this.ebit;
   }
 
+  public double getWacc() {
+    return this.wacc;
+  }
+
+  public double getDiscountedFCF() {
+    return this.discountedFCF;
+  }
+
+
   public double computeFCF() {
     freeCashFlow = ebit * (1-taxRate) + DandA - capEx - netWorkingCapitalChange;
     return freeCashFlow;
@@ -99,26 +126,15 @@ public class DCFModel {
        return discountFactor;
     }
 
-  // public double computeDiscountedFCF() {
-  //  if(this.forecastYear == 0) {
-  //    return discountedFCF = 0;
-  //  } else {
-  //   discountedFCF = freeCashFlow / discountFactor;
-  //   return discountedFCF;
-  //  }
-  // }
+  public double computeDiscountedFCF() { 
+    discountedFCF = freeCashFlow / discountFactor;
+    return discountedFCF;
+  
+  }
 
-  // public double getDiscountedFCF() {
-  //   return this.discountedFCF;
-  // }
+  
 
-  // public double computePresentValue() {
-  //   double sum = 0.00;
-  //   for(HistFreeCashFlow cashflow : this.HistoricalData) {
-  //     sum += cashflow.getDiscountedFCF();
-  //   }
-  //   return enterpriseValue = sum;
-  // }
+  
 
 
    public String toString() {
