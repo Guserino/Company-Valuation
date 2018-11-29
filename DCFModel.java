@@ -1,5 +1,4 @@
 public class DCFModel {
-
    //identifier
   int year;
   //Forecast Driver
@@ -17,12 +16,6 @@ public class DCFModel {
   double discountFactor;
   double wacc = 0.0756;
   double growthRate;
-  // //model drivers: based off historical Data
-  // double ebit_Sales;
-  // double DA_Sales;
-  // double Capex_Sales;
-  // double nwc_sales;
-
 
   public DCFModel() {
     this.year = year;
@@ -38,15 +31,37 @@ public class DCFModel {
     this.growthRate = growthRate;
   }
 
-  public void setGrowthRate(double x) {
-    this.growthRate = x;
-  }
-
   public void setYear(int x) {
     this.year = x;
   }
+
   public void setSales(double s) {
     this.sales = s;
+  }
+  public double getSales() {
+    return this.sales;
+  }
+
+  public void setGrowthRate(double x) {
+    this.growthRate = x;
+  }
+  public double getGrowthRate() {
+    return this.growthRate;
+  }
+
+  public void setFCF(double f) {
+    this.freeCashFlow = f;
+  }
+  public double getFCF() {
+    return this.freeCashFlow;
+  }
+
+  public double getDiscountedFCF() {
+    return this.discountedFCF;
+  }
+
+  public void setDiscountFactor(double d) {
+    this.discountFactor = d;
   }
   public void setEbit(double e) {
     this.ebit = e;
@@ -54,26 +69,17 @@ public class DCFModel {
   public void setDandA(double d) {
     this.DandA = d;
   }
-  public void setNwc(double n) {
-    this.netWorkingCapitalChange = n;
-  }
   public void setCapEx(double c) {
     this.capEx = c;
+  }
+  public void setNwc(double n) {
+    this.netWorkingCapitalChange = n;
   }
   public void setTaxRate(double t) {
     this.taxRate = t;
   }
-
   public void setForecastYear(double y) {
     this.forecastYear = y;
-  }
-
-  public void setDiscountFactor(double d) {
-    this.discountFactor = d;
-  }
-
-  public void setFCF(double f) {
-    this.freeCashFlow = f;
   }
   public void setDCF(double d) {
     this.discountedFCF = d;
@@ -82,24 +88,9 @@ public class DCFModel {
   public void setWacc(double w) {
     this.wacc = w;
   }
-  public double getDCF() {
-    return this.discountedFCF;
-  }
-
-  public double getSales() {
-    return this.sales;
-  }
-
-  public double getGrowthRate() {
-    return this.growthRate;
-  }
 
   public double getYear() {
     return this.year;
-  }
-
-  public double getFCF() {
-    return this.freeCashFlow;
   }
 
   public double getEbit() {
@@ -110,32 +101,26 @@ public class DCFModel {
     return this.wacc;
   }
 
-  public double getDiscountedFCF() {
-    return this.discountedFCF;
-  }
-
-
   public double computeFCF() {
     freeCashFlow = ebit * (1-taxRate) + DandA - capEx - netWorkingCapitalChange;
     return freeCashFlow;
   }
 
-
-    public double computeDiscountFactor() {
+  public double computeDiscountFactor() {
        discountFactor = Math.pow((1 + wacc), forecastYear);
        return discountFactor;
-    }
+  }
 
   public double computeDiscountedFCF() { 
     discountedFCF = freeCashFlow / discountFactor;
-    return discountedFCF;
-  
+    return discountedFCF;  
   }
 
-  
-
-  
-
+  // public double computeFCFModelComponents() {
+  //   for(DCFModel x: this.DCFModelForecast) {
+  //     System.out.print("HI");
+  //   }
+  // }
 
    public String toString() {
     StringBuilder sb = new StringBuilder();
