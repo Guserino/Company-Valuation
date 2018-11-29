@@ -7,11 +7,13 @@ public class Company {
   private String ticker;
   private String date;
   private double enterpriseValue;
+  private double equityValue;
   private double numberOfShares;
   private double pricePerShare;
   LinkedList<HistFreeCashFlow> HistoricalData;
   LinkedList<DCFModel> DCFModelForecast;
   private double terminalValue;
+  private double terminalGrowthRate = .02;
 
   //Cost of Capital
   private double totalDebt;
@@ -58,6 +60,14 @@ public class Company {
     return this.wacc;
   }
 
+  public double getTerminalGrowthRate() {
+    return this.terminalGrowthRate;
+  }
+
+  public double getTerminalValue() {
+    return this.terminalValue;
+  }
+
   public void setTotalDebt(double d) {
     this.totalDebt = d;
   }
@@ -73,9 +83,15 @@ public class Company {
   public void setCostOfDebt(double d) {
     this.costOfDebt = d;
   }
+
+  public double getPricePerShare() {
+    return this.pricePerShare;
+  }
   // public LinkedList<HistFreeCashFlow> getHistoricalData() {
   //   return this.HistoricalData<HistoricalData>();
   // }
+
+
   public void addHistoricalData(HistFreeCashFlow data) {
     this.HistoricalData.add(data);
   }
@@ -84,26 +100,45 @@ public class Company {
     this.DCFModelForecast.add(data);
   }
 
-  public double computePresentValue() {
-    double sum = 0.00;
-    for(DCFModel cashflow : this.DCFModelForecast) {
-      sum += cashflow.getDiscountedFCF();
-    }
-    return enterpriseValue = sum;
-  }
-
   public void computeWacc() {
     this.wacc = (this.totalDebt/(this.totalDebt + this.totalEquity)) * this.costOfDebt + (this.totalEquity/(this.totalDebt + this.totalEquity)) * costOfEquity;
   }
 
+  public double computeEnterpriseValue() {
+    double sum = 0.00;
+    for(DCFModel cashflow : this.DCFModelForecast) {
+      sum += cashflow.getDiscountedFCF();
+    }
+    return enterpriseValue = sum + terminalValue;
+  }
+
   public double computePricePerShare() {
-    pricePerShare = enterpriseValue / numberOfShares;
+    pricePerShare = equityValue / numberOfShares;
     return pricePerShare;
   }
 
-  public double getPricePerShare() {
-    return this.pricePerShare;
+  public double computeTerminalValue() {
+    double CF = this.DCFModelForecast.getLast().getFCF();
+    terminalValue = CF * (1 + terminalGrowthRate) / (wacc - terminalGrowthRate);
+
+    return terminalValue;
   }
 
+  public double computeEquityValue() {
+    return equityValue = enterpriseValue - totalDebt;
+  }
 
+  public double getLastHistoricalYear() {
+    return this.HistoricalData.getLast().getYear();
+  }
+
+  public  void computeForecastYear() {
+    int prevYear = 2018;
+    int increment = 1;
+    for(DCFModel x: this.DCFModelForecast) {
+      int Year = prevYear + increment;
+      x.setYear(Year);
+      increment++;
+    }
+  }
 }
