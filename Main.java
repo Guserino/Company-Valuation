@@ -1,69 +1,69 @@
 // Created by Gustavo Velez with the help of Schuyler Manchester
+//Input all figures in Millions
 import java.lang.Math;
 import java.util.LinkedList;
 
 class Main {
   public static void main(String[] args) {
     double ForecastedTaxRate = .21;
-    double terminalGrowthRate = .02;
+    // double terminalGrowthRate = .02;
    
    
-    Company target = new Company("Target", "TGT", "11/14/2018", 526.35);
+    Company comp1 = new Company("Target", "TGT", "11/14/2018", 526.35);
     
-    target.setCostOfDebt(.034);
-    target.setTotalDebt(11317);
-    target.setCostOfEquity(.086);
-    target.setTotalEquity(45145);
-    target.computeWacc();
+    comp1.setCostOfDebt(.034);
+    comp1.setTotalDebt(11317);
+    comp1.setCostOfEquity(.086);
+    comp1.setTotalEquity(45145);
+    comp1.computeWacc();
 
-    for(DCFModel x: target.DCFModelForecast) {
-      x.setWacc(target.getWacc());
+    for(DCFModel x: comp1.DCFModelForecast) {
+      x.setWacc(comp1.getWacc());
     }
     
     //Section Obtains Historical Data
     //year, NI, EBIT, D&A, CapEx, NWC, TaxRate
     HistFreeCashFlow FCF2016 = new HistFreeCashFlow(2016, 73785, 5102, 2213, 1438, 490, .29);
-    target.addHistoricalData(FCF2016);
+    comp1.addHistoricalData(FCF2016);
     HistFreeCashFlow FCF2017 = new HistFreeCashFlow(2017, 69495, 5012, 2298, 1547, -195, .29);
-    target.addHistoricalData(FCF2017);
+    comp1.addHistoricalData(FCF2017);
     HistFreeCashFlow FCF2018 = new HistFreeCashFlow(2018, 71879, 4403, 2445, 2533, 1241, .21);
-    target.addHistoricalData(FCF2018);
+    comp1.addHistoricalData(FCF2018);
     //Model
     
     //Creates Fields for DCFModel
     DCFModel FCF2019 = new DCFModel();
-    target.addDCFModelForecast(FCF2019);
+    comp1.addDCFModelForecast(FCF2019);
     DCFModel FCF2020 = new DCFModel();
-    target.addDCFModelForecast(FCF2020);
+    comp1.addDCFModelForecast(FCF2020);
     DCFModel FCF2021 = new DCFModel();
-    target.addDCFModelForecast(FCF2021);
+    comp1.addDCFModelForecast(FCF2021);
     DCFModel FCF2022 = new DCFModel();
-    target.addDCFModelForecast(FCF2022);
+    comp1.addDCFModelForecast(FCF2022);
     DCFModel FCF2023 = new DCFModel();
-    target.addDCFModelForecast(FCF2023);
+    comp1.addDCFModelForecast(FCF2023);
     DCFModel FCF2024 = new DCFModel();
-    target.addDCFModelForecast(FCF2024);
+    comp1.addDCFModelForecast(FCF2024);
     DCFModel FCF2025 = new DCFModel();
-    target.addDCFModelForecast(FCF2025);
+    comp1.addDCFModelForecast(FCF2025);
     DCFModel FCF2026 = new DCFModel();
-    target.addDCFModelForecast(FCF2026);
+    comp1.addDCFModelForecast(FCF2026);
     DCFModel FCF2027 = new DCFModel();
-    target.addDCFModelForecast(FCF2027);
+    comp1.addDCFModelForecast(FCF2027);
     DCFModel FCF2028 = new DCFModel();
-    target.addDCFModelForecast(FCF2028);
+    comp1.addDCFModelForecast(FCF2028);
 
     //Sets FCFModel Years
     int increment = 1;
-    int baseYear = 2018;
-    for(DCFModel x: target.DCFModelForecast) {
-      int year = baseYear + increment;
+    int baseYear = 2018;//comp1.getLastHistoricalYear();
+    for(DCFModel x: comp1.DCFModelForecast) {
       x.setYear(increment + baseYear);
       x.setDiscountFactor(Math.pow(1+x.getWacc(), increment));
       increment += 1;
     }
 
     LinkedList<Double> historicalSales = new LinkedList<>();
-    for(HistFreeCashFlow x: target.HistoricalData) {
+    for(HistFreeCashFlow x: comp1.HistoricalData) {
       historicalSales.add(x.getSales());
     }
     LinkedList<Double> YearOverYear = new LinkedList<>();
@@ -82,26 +82,25 @@ class Main {
     for(Double x: YearOverYear) {
       historicalGrowthRate += x;
     }
-
     historicalGrowthRate /= YearOverYear.size();
 
-    double gRateDecayToTV = (historicalGrowthRate - terminalGrowthRate) / 9;
-    double salesCurentYear = FCF2018.getSales();
+    double gRateDecayToTV = (historicalGrowthRate - comp1.getTerminalGrowthRate()) / 9;
+    double salesPreviousYear = FCF2018.getSales();
     double modelYear = 0;
 
     double y = 0;
 
-    for(DCFModel x: target.DCFModelForecast) {
+    for(DCFModel x: comp1.DCFModelForecast) {
       double forecastedGrowthRate = -1 * (1 - ((1 + historicalGrowthRate) - (y * gRateDecayToTV)));
       x.setGrowthRate(forecastedGrowthRate);
       y++;
     }
 
-    double salesPrevForecastYear;
-    for(DCFModel x: target.DCFModelForecast) {
-      salesPrevForecastYear = salesCurentYear * (1+x.getGrowthRate());
-      x.setSales(salesPrevForecastYear);
-      salesCurentYear = salesPrevForecastYear;
+    double salesCurrentYear;
+    for(DCFModel x: comp1.DCFModelForecast) {
+      salesCurrentYear = salesPreviousYear * (1+x.getGrowthRate());
+      x.setSales(salesCurrentYear);
+      salesPreviousYear = salesCurrentYear;
     }
 
 
@@ -111,7 +110,7 @@ class Main {
     double nwcForecast = 0;
     double CapExForecast = 0;
     double DandAForecast = 0;
-    for(HistFreeCashFlow x: target.HistoricalData) {
+    for(HistFreeCashFlow x: comp1.HistoricalData) {
         double YearlycapEx = x.getCapEx() / x.getSales();
         CapExForecast += YearlycapEx;
         double YearlyEbit = x.getEbit() / x.getSales();
@@ -121,13 +120,13 @@ class Main {
         double YearlyDandA = x.getDandA() / x.getSales();
         DandAForecast += YearlyDandA;
     }
-    CapExForecast /= target.HistoricalData.size();
-    ebitForecast /= target.HistoricalData.size();
-    nwcForecast /= target.HistoricalData.size();
-    DandAForecast /= target.HistoricalData.size();
+    CapExForecast /= comp1.HistoricalData.size();
+    ebitForecast /= comp1.HistoricalData.size();
+    nwcForecast /= comp1.HistoricalData.size();
+    DandAForecast /= comp1.HistoricalData.size();
 
     double forecastYear = 1;
-    for(DCFModel x: target.DCFModelForecast) {
+    for(DCFModel x: comp1.DCFModelForecast) {
       x.setEbit(ebitForecast * x.getSales());
       x.setDandA(DandAForecast * x.getSales());
       x.setCapEx(CapExForecast * x.getSales());
@@ -141,46 +140,28 @@ class Main {
 
     System.out.println(FCF2028.getDiscountedFCF());
 
-    double terminalValue = ((FCF2028.getFCF() * (1 + terminalGrowthRate))/(target.getWacc() - terminalGrowthRate))/(Math.pow(1 + target.DCFModelForecast.getLast().getWacc(), 10));
+    comp1.computeTerminalValue();
+    // double terminalValue = ((FCF2028.getFCF() * (1 + terminalGrowthRate))/(comp1.getWacc() - terminalGrowthRate))/(Math.pow(1 + comp1.DCFModelForecast.getLast().getWacc(), 10));
 
-    double LastYearCashFlowPlusTV = target.DCFModelForecast.getLast().getDiscountedFCF() + terminalValue;
+    // double LastYearCashFlowPlusTV = comp1.DCFModelForecast.getLast().getDiscountedFCF() + terminalValue;
 
-    FCF2028.setDCF(LastYearCashFlowPlusTV);
-    target.computePresentValue();
-
-    target.setEV(target.getEV() - target.getTotalDebt());
-    target.computePricePerShare();
+    // FCF2028.setDCF(LastYearCashFlowPlusTV);
+    comp1.computeTerminalValue();
     
-    target.computePresentValue();
+    comp1.computeEnterpriseValue();
 
-  
-
+    comp1.computeEquityValue();
+    comp1.computePricePerShare();
     
 
 
-    // //Section computes Free Cash Flow and Discounts it to the Present
-    // for(HistFreeCashFlow x: target.HistoricalData) {
-    //   x.computeFCF();
-    //   x.computeDiscountFactor();
-    //   x.computeDiscountedFCF();
-    //   // System.out.println(x);
-    // }
-
-    // System.out.printf("Sum of DCF: $%.02f \n",target.computePresentValue());
-    // // Uses Present value to compute price per share
-    // target.computePricePerShare();
-    // System.out.printf("Price Per Share: $%.02f \n", target.getPricePerShare());
-
-    //System.out.printf("Model Growth Rate: %.03f \n", historicalGrowthRate);
-
-    System.out.println("Capex%Sales " + CapExForecast);
-    System.out.println("EBIT%Sales" + ebitForecast);
-    System.out.println("NWC%Sales " + nwcForecast);
-    System.out.println("D&A%Sales " + DandAForecast);
-    System.out.println(target.DCFModelForecast.toString());
-    System.out.println(terminalValue);
-    System.out.println(target.getEV());
-    System.out.println(target.getPricePerShare());
-    System.out.println(FCF2028.getDiscountedFCF());
+    System.out.println(comp1.DCFModelForecast.toString());
+    System.out.println("Discounted Terminal Value: " + comp1.getTerminalValue());
+    System.out.println("Enterprise Value: " + comp1.getEV());
+    System.out.println("Price Per Share: " + comp1.getPricePerShare());
+    System.out.println("Discounted FCF 2018: " + FCF2028.getDiscountedFCF());
+    System.out.println(YearOverYear);
+    System.out.println(historicalGrowthRate);
+    System.out.println(gRateDecayToTV);
 }
 }
