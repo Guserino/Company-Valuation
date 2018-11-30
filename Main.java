@@ -31,6 +31,8 @@ class Main {
     comp1.addHistoricalData(FCF2018);
     //Model
     
+
+    //i want to be able to do this with less lines and dynamic based on the input from last historical year
     //Creates Fields for DCFModel
     DCFModel FCF2019 = new DCFModel();
     comp1.addDCFModelForecast(FCF2019);
@@ -53,6 +55,7 @@ class Main {
     DCFModel FCF2028 = new DCFModel();
     comp1.addDCFModelForecast(FCF2028);
 
+    //I want to be able to do this on a method separate from the main method
     //Sets FCFModel Years
     int increment = 1;
     int baseYear = 2018;//comp1.getLastHistoricalYear();
@@ -61,7 +64,9 @@ class Main {
       x.setDiscountFactor(Math.pow(1+x.getWacc(), increment));
       increment += 1;
     }
+    // comp1.computeForecastYear();
 
+    // I want to move this outside of the main method. Create a method that does this in one of the classes
     LinkedList<Double> historicalSales = new LinkedList<>();
     for(HistFreeCashFlow x: comp1.HistoricalData) {
       historicalSales.add(x.getSales());
@@ -96,6 +101,7 @@ class Main {
       y++;
     }
 
+    //i want to create a method on a separate class to do this
     double salesCurrentYear;
     for(DCFModel x: comp1.DCFModelForecast) {
       salesCurrentYear = salesPreviousYear * (1+x.getGrowthRate());
@@ -104,7 +110,7 @@ class Main {
     }
 
 
-
+    //I want to possibly move this to the DCFModel Class
     //Calculates Forecasts for Components of FCF in DCFModel
     double ebitForecast = 0;
     double nwcForecast = 0;
