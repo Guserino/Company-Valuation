@@ -128,12 +128,12 @@ public class Company {
     return equityValue = enterpriseValue - totalDebt;
   }
 
-  public double getLastHistoricalYear() {
+  public int getLastHistoricalYear() {
     return this.HistoricalData.getLast().getYear();
   }
 
   public  void computeForecastYear() {
-    int prevYear = 2018;
+    int prevYear = getLastHistoricalYear();
     int increment = 1;
     for(DCFModel x: this.DCFModelForecast) {
       int Year = prevYear + increment;
