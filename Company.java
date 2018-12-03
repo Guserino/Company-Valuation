@@ -118,8 +118,9 @@ public class Company {
   }
 
   public double computeTerminalValue() {
+    double discountFactor = this.DCFModelForecast.getLast().getDiscountFactor();
     double CF = this.DCFModelForecast.getLast().getFCF();
-    terminalValue = CF * (1 + terminalGrowthRate) / (wacc - terminalGrowthRate);
+    terminalValue = CF * (1 + terminalGrowthRate) / (wacc - terminalGrowthRate) / discountFactor;
 
     return terminalValue;
   }
@@ -128,12 +129,12 @@ public class Company {
     return equityValue = enterpriseValue - totalDebt;
   }
 
-  public int getLastHistoricalYear() {
-    return this.HistoricalData.getLast().getYear();
-  }
+  // public int getLastHistoricalYear() {
+  //   return this.HistoricalData.getLast().getYear();
+  // }
 
   public  void computeForecastYear() {
-    int prevYear = getLastHistoricalYear();
+    int prevYear = this.HistoricalData.getLast().getYear();
     int increment = 1;
     for(DCFModel x: this.DCFModelForecast) {
       int Year = prevYear + increment;
