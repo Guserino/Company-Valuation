@@ -1,4 +1,4 @@
-public class DCFModel {
+public class Forecast {
    //identifier
   int year;
   //Forecast Driver
@@ -17,7 +17,7 @@ public class DCFModel {
   double wacc = 0.0756;
   double growthRate;
 
-  public DCFModel() {
+  public Forecast() {
     this.year = year;
     this.sales = sales;
     this.ebit = ebit;
@@ -124,7 +124,7 @@ public class DCFModel {
   }
 
   // public double computeFCFModelComponents() {
-  //   for(DCFModel x: this.DCFModelForecast) {
+  //   for(Forecast x: this.ForecastForecast) {
   //     System.out.print("HI");
   //   }
   // }
