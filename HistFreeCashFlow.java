@@ -29,7 +29,7 @@ public class HistFreeCashFlow {
     return this.sales;
   }
 
-  public double getYear() {
+  public int getYear() {
     return this.year;
   }
 
