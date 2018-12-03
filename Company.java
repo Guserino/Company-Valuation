@@ -11,7 +11,7 @@ public class Company {
   private double numberOfShares;
   private double pricePerShare;
   LinkedList<HistFreeCashFlow> HistoricalData;
-  LinkedList<DCFModel> DCFModelForecast;
+  LinkedList<Forecast> FCFForecast;
   private double terminalValue;
   private double terminalGrowthRate = .02;
 
@@ -28,7 +28,7 @@ public class Company {
     this.date = date;
     this.numberOfShares = numberOfShares;
     this.HistoricalData = new LinkedList<>();
-    this.DCFModelForecast = new LinkedList<>();
+    this.FCFForecast = new LinkedList<>();
   }
 
 
@@ -96,8 +96,8 @@ public class Company {
     this.HistoricalData.add(data);
   }
 
-  public void addDCFModelForecast(DCFModel data) {
-    this.DCFModelForecast.add(data);
+  public void addFCFForecast(Forecast data) {
+    this.FCFForecast.add(data);
   }
 
   public void computeWacc() {
@@ -106,7 +106,7 @@ public class Company {
 
   public double computeEnterpriseValue() {
     double sum = 0.00;
-    for(DCFModel cashflow : this.DCFModelForecast) {
+    for(Forecast cashflow : this.FCFForecast) {
       sum += cashflow.getDiscountedFCF();
     }
     return enterpriseValue = sum + terminalValue;
@@ -118,8 +118,8 @@ public class Company {
   }
 
   public double computeTerminalValue() {
-    double discountFactor = this.DCFModelForecast.getLast().getDiscountFactor();
-    double CF = this.DCFModelForecast.getLast().getFCF();
+    double discountFactor = this.FCFForecast.getLast().getDiscountFactor();
+    double CF = this.FCFForecast.getLast().getFCF();
     terminalValue = CF * (1 + terminalGrowthRate) / (wacc - terminalGrowthRate) / discountFactor;
 
     return terminalValue;
@@ -136,7 +136,7 @@ public class Company {
   public  void computeForecastYear() {
     int prevYear = this.HistoricalData.getLast().getYear();
     int increment = 1;
-    for(DCFModel x: this.DCFModelForecast) {
+    for(Forecast x: this.FCFForecast) {
       int Year = prevYear + increment;
       x.setYear(Year);
       increment++;
