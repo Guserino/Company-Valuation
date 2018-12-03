@@ -81,6 +81,9 @@ public class DCFModel {
   public void setForecastYear(double y) {
     this.forecastYear = y;
   }
+  public double getForecastYear() {
+    return this.forecastYear;
+  }
   public void setDCF(double d) {
     this.discountedFCF = d;
   }
@@ -109,6 +112,10 @@ public class DCFModel {
   public double computeDiscountFactor() {
        discountFactor = Math.pow((1 + wacc), forecastYear);
        return discountFactor;
+  }
+
+  public double getDiscountFactor() {
+    return this.discountFactor;
   }
 
   public double computeDiscountedFCF() { 
