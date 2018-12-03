@@ -17,7 +17,7 @@ class Main {
     comp1.setTotalEquity(45145);
     comp1.computeWacc();
 
-    for(DCFModel x: comp1.DCFModelForecast) {
+    for(Forecast x: comp1.FCFForecast) {
       x.setWacc(comp1.getWacc());
     }
     
@@ -33,33 +33,33 @@ class Main {
     
 
     //i want to be able to do this with less lines and dynamic based on the input from last historical year
-    //Creates Fields for DCFModel
-    DCFModel FCF2019 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2019);
-    DCFModel FCF2020 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2020);
-    DCFModel FCF2021 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2021);
-    DCFModel FCF2022 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2022);
-    DCFModel FCF2023 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2023);
-    DCFModel FCF2024 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2024);
-    DCFModel FCF2025 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2025);
-    DCFModel FCF2026 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2026);
-    DCFModel FCF2027 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2027);
-    DCFModel FCF2028 = new DCFModel();
-    comp1.addDCFModelForecast(FCF2028);
+    //Creates Fields for Forecast
+    Forecast FCF2019 = new Forecast();
+    comp1.addFCFForecast(FCF2019);
+    Forecast FCF2020 = new Forecast();
+    comp1.addFCFForecast(FCF2020);
+    Forecast FCF2021 = new Forecast();
+    comp1.addFCFForecast(FCF2021);
+    Forecast FCF2022 = new Forecast();
+    comp1.addFCFForecast(FCF2022);
+    Forecast FCF2023 = new Forecast();
+    comp1.addFCFForecast(FCF2023);
+    Forecast FCF2024 = new Forecast();
+    comp1.addFCFForecast(FCF2024);
+    Forecast FCF2025 = new Forecast();
+    comp1.addFCFForecast(FCF2025);
+    Forecast FCF2026 = new Forecast();
+    comp1.addFCFForecast(FCF2026);
+    Forecast FCF2027 = new Forecast();
+    comp1.addFCFForecast(FCF2027);
+    Forecast FCF2028 = new Forecast();
+    comp1.addFCFForecast(FCF2028);
 
     //I want to be able to do this on a method separate from the main method
     //Sets FCFModel Years
     int increment = 1;
     int baseYear = 2018;//comp1.getLastHistoricalYear();
-    for(DCFModel x: comp1.DCFModelForecast) {
+    for(Forecast x: comp1.FCFForecast) {
       x.setYear(increment + baseYear);
       x.setDiscountFactor(Math.pow(1+x.getWacc(), increment));
       increment += 1;
@@ -95,7 +95,7 @@ class Main {
 
     double y = 0;
 
-    for(DCFModel x: comp1.DCFModelForecast) {
+    for(Forecast x: comp1.FCFForecast) {
       double forecastedGrowthRate = -1 * (1 - ((1 + historicalGrowthRate) - (y * gRateDecayToTV)));
       x.setGrowthRate(forecastedGrowthRate);
       y++;
@@ -103,15 +103,15 @@ class Main {
 
     //i want to create a method on a separate class to do this
     double salesCurrentYear;
-    for(DCFModel x: comp1.DCFModelForecast) {
+    for(Forecast x: comp1.FCFForecast) {
       salesCurrentYear = salesPreviousYear * (1+x.getGrowthRate());
       x.setSales(salesCurrentYear);
       salesPreviousYear = salesCurrentYear;
     }
 
 
-    //I want to possibly move this to the DCFModel Class
-    //Calculates Forecasts for Components of FCF in DCFModel
+    //I want to possibly move this to the Forecast Class
+    //Calculates Forecasts for Components of FCF in Forecast
     double ebitForecast = 0;
     double nwcForecast = 0;
     double CapExForecast = 0;
@@ -132,7 +132,7 @@ class Main {
     DandAForecast /= comp1.HistoricalData.size();
 
     double forecastYear = 1;
-    for(DCFModel x: comp1.DCFModelForecast) {
+    for(Forecast x: comp1.FCFForecast) {
       x.setEbit(ebitForecast * x.getSales());
       x.setDandA(DandAForecast * x.getSales());
       x.setCapEx(CapExForecast * x.getSales());
@@ -147,9 +147,9 @@ class Main {
     System.out.println(FCF2028.getDiscountedFCF());
 
     comp1.computeTerminalValue();
-    // double terminalValue = ((FCF2028.getFCF() * (1 + terminalGrowthRate))/(comp1.getWacc() - terminalGrowthRate))/(Math.pow(1 + comp1.DCFModelForecast.getLast().getWacc(), 10));
+    // double terminalValue = ((FCF2028.getFCF() * (1 + terminalGrowthRate))/(comp1.getWacc() - terminalGrowthRate))/(Math.pow(1 + comp1.FCFForecast.getLast().getWacc(), 10));
 
-    // double LastYearCashFlowPlusTV = comp1.DCFModelForecast.getLast().getDiscountedFCF() + terminalValue;
+    // double LastYearCashFlowPlusTV = comp1.FCFForecast.getLast().getDiscountedFCF() + terminalValue;
 
     // FCF2028.setDCF(LastYearCashFlowPlusTV);
     comp1.computeTerminalValue();
@@ -161,7 +161,7 @@ class Main {
     
 
 
-    System.out.println(comp1.DCFModelForecast.toString());
+    System.out.println(comp1.FCFForecast.toString());
     System.out.println("Discounted Terminal Value: " + comp1.getTerminalValue());
     System.out.println("Enterprise Value: " + comp1.getEV());
     System.out.println("Price Per Share: " + comp1.getPricePerShare());
